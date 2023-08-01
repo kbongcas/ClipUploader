@@ -21,4 +21,10 @@
     <ProjectReference Include="..\ClipUploader\ClipUploader.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Data\gs.mp4">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

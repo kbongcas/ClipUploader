@@ -1,3 +1,6 @@
+using ClipUploader.Services;
+using Microsoft.Extensions.Azure;
+
 namespace ClipUploader;
 
 public class Program
@@ -6,12 +9,16 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
 
         builder.Services.AddControllers();
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+        builder.Services.AddSingleton<IStorageService, StorageService>();
+        builder.Services.AddAzureClients(clientBuilder =>
+        {
+            var azureStorageConnectionString = builder.Configuration.GetValue<string>("AzureStorageConnectionString");
+            clientBuilder.AddBlobServiceClient(azureStorageConnectionString);
+        });
 
         var app = builder.Build();
 

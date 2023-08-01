@@ -5,9 +5,12 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=
     ports:
-      - "80"
-      - "443"
+      - "8080:80" 
+      - "4343:443" 
     volumes:
+      - ~/.aspnet/https:/https:ro
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
