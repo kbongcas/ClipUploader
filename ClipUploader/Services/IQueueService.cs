@@ -2,8 +2,7 @@
 using ClipUploader.Models;
 
 namespace ClipUploader.Services;
-
-public interface IStorageService
+public interface IQueueService
 {
-    Task<BlobResponseDto> UploadAsync(Clip clip);
+    Task<QueueMessageResponseDto> Enqueue(Clip clip);
 }

@@ -2,12 +2,13 @@
 
 namespace ClipUploader.Dtos;
 
-public class BlobResponseDto
+public class QueueMessageResponseDto
 {
+
     public Clip Clip { get; set; }
     public string? ErrorMessage {  get; set; }
 
-    public BlobResponseDto()
+    public QueueMessageResponseDto()
     {
         Clip = new Clip();
     }

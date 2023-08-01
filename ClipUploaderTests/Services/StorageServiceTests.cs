@@ -1,5 +1,6 @@
 ﻿using Azure.Storage.Blobs;
 using ClipUploader.Dtos;
+using ClipUploader.Models;
 using ClipUploader.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -10,7 +11,6 @@ public class StorageServiceTests
 {
     private StorageService _storageService;
     private BlobServiceClient _blobServiceClient;
-    private readonly string accountName = "devstoreaccount1";
     private readonly string containerName = "clips";
 
 
@@ -38,6 +38,7 @@ public class StorageServiceTests
     {
         var fileName = "gs.mp4";
         var filePath = Path.Combine(Environment.CurrentDirectory, "Data/") + fileName;
+        var Id = Guid.NewGuid().ToString();
 
         BlobResponseDto blobResponse = null;
         BlobContainerClient containerClient = _blobServiceClient.GetBlobContainerClient(containerName);
@@ -48,13 +49,14 @@ public class StorageServiceTests
         using (var stream = System.IO.File.OpenRead(filePath))
         {
             var file = new FormFile(stream, 0, stream.Length, null, Path.GetFileName(stream.Name));
-            blobResponse = await _storageService.UploadAsync(file);
-            blob = containerClient.GetBlobClient(fileName);
+            var clip = new Clip { File = file, Name = fileName, Id = Id };
+            blobResponse = await _storageService.UploadAsync(clip);
+            blob = containerClient.GetBlobClient(Id);
         }
 
         Assert.True(blob.Exists());
         Assert.IsNull(blobResponse.ErrorMessage);
-        Assert.That(blob.Uri.AbsoluteUri, Is.EqualTo(blobResponse.Blob.Uri));
+        Assert.That(blob.Uri.AbsoluteUri, Is.EqualTo(blobResponse.Clip.Uri));
 
     }
 }

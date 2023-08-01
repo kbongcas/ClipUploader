@@ -1,4 +1,6 @@
-﻿using ClipUploader.Services;
+﻿using ClipUploader.Dtos;
+using ClipUploader.Models;
+using ClipUploader.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClipDataService.Controllers;
@@ -8,22 +10,32 @@ namespace ClipDataService.Controllers;
 public class ClipsController : ControllerBase
 {
     private IStorageService _storageService;
+    private IQueueService _queueService;
 
-    public ClipsController(IStorageService storageService)
+    public ClipsController(
+        IStorageService storageService,
+        IQueueService queueService
+        )
     {
         _storageService = storageService;
+        _queueService = queueService;
     }
 
     [HttpPost]
     [RequestSizeLimit(200_000_000)]
     public async Task<IActionResult> Upload(IFormFile file)
     {
-        var reponse = await _storageService.UploadAsync(file);
-        if(reponse.ErrorMessage != null)
-        {
-            return Ok();
-        }
+        //@TODO - Extract some of this logic into own service?
+        var id = Guid.NewGuid().ToString();
+        var clip = new Clip() { Id = id, Name = file.FileName, File = file };
 
-        return StatusCode(StatusCodes.Status500InternalServerError);
+        var uploadResponse = await _storageService.UploadAsync(clip);
+        clip = uploadResponse.Clip;
+        if(uploadResponse.ErrorMessage != null) return StatusCode(StatusCodes.Status500InternalServerError);
+
+        var queueResponse = await _queueService.Enqueue(clip);
+        if(queueResponse.ErrorMessage != null) return StatusCode(StatusCodes.Status500InternalServerError);
+
+        return Ok();
     }
 }

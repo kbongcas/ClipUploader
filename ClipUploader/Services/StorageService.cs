@@ -1,12 +1,12 @@
 ﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using ClipUploader.Dtos;
+using ClipUploader.Models;
 
 namespace ClipUploader.Services;
 
 public class StorageService : IStorageService
 {
-    private IConfiguration _config;
     private BlobServiceClient _blobServiceClient;
     private BlobContainerClient _blobContainerClient;
 
@@ -15,35 +15,35 @@ public class StorageService : IStorageService
         BlobServiceClient blobServiceClient 
         )
     {
-        _config = config;
         _blobServiceClient = blobServiceClient;
         _blobContainerClient = _blobServiceClient.GetBlobContainerClient(
-            _config.GetValue<string>("BlobContainerName"));
+            config.GetValue<string>("BlobContainerName"));
     }
     
-    public async Task<BlobResponseDto> UploadAsync(IFormFile data)
+    public async Task<BlobResponseDto> UploadAsync(Clip clip)
     {
         BlobResponseDto responseDto = new BlobResponseDto();
         try
         {
-            BlobClient blobClient = _blobContainerClient.GetBlobClient(data.FileName);
+            if (clip.File == null) 
+                throw new Exception("Clip does not contain a file.");
+
+            BlobClient blobClient = _blobContainerClient.GetBlobClient(clip.Id);
             Azure.Response<BlobContentInfo> response;
-            await using (Stream? stream = data.OpenReadStream())
+            await using (Stream? stream = clip.File.OpenReadStream())
             {
                 response = await blobClient.UploadAsync(stream);
             }
-            if(response.GetRawResponse().IsError) {
-                //@TODO - Log Error Message
-                responseDto.ErrorMessage = response.GetRawResponse().ReasonPhrase;
-            }
-            else
-            {
-                responseDto.Blob.Uri = blobClient.Uri.AbsoluteUri;
-                responseDto.Blob.Name = blobClient.Name;
-            }
+
+            if (response.GetRawResponse().IsError) 
+                throw new Exception(response.GetRawResponse().ReasonPhrase);
+
+            responseDto.Clip = clip;
+            responseDto.Clip.Uri = blobClient.Uri.AbsoluteUri;
         }
         catch(Exception ex)
         {
+            //@TODO - Log Error Message
             responseDto.ErrorMessage = ex.Message;
         }
         return responseDto;
