@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33815.320
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClipUploader", "ClipUploader\ClipUploader.csproj", "{3974A645-0EEC-44DD-AD78-61A8D231BE68}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClipUploaderTests", "ClipUploaderTests\ClipUploaderTests.csproj", "{8652B81D-9A16-46E0-B47D-206B76532E33}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{8769B031-24B5-41C3-A0FF-F57A2EE22F55}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3974A645-0EEC-44DD-AD78-61A8D231BE68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3974A645-0EEC-44DD-AD78-61A8D231BE68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3974A645-0EEC-44DD-AD78-61A8D231BE68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3974A645-0EEC-44DD-AD78-61A8D231BE68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8652B81D-9A16-46E0-B47D-206B76532E33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8652B81D-9A16-46E0-B47D-206B76532E33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8652B81D-9A16-46E0-B47D-206B76532E33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8652B81D-9A16-46E0-B47D-206B76532E33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8769B031-24B5-41C3-A0FF-F57A2EE22F55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8769B031-24B5-41C3-A0FF-F57A2EE22F55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8769B031-24B5-41C3-A0FF-F57A2EE22F55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8769B031-24B5-41C3-A0FF-F57A2EE22F55}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A18A8E91-24CF-4734-B761-BB7A8F5C6FB5}
+	EndGlobalSection
+EndGlobal

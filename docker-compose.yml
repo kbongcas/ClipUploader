@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  clipuploader:
+    image: ${DOCKER_REGISTRY-}clipuploader
+    build:
+      context: .
+      dockerfile: ClipUploader/Dockerfile
