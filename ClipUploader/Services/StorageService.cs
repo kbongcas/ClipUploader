@@ -39,7 +39,6 @@ public class StorageService : IStorageService
                 throw new Exception(response.GetRawResponse().ReasonPhrase);
 
             responseDto.Clip = clip;
-            responseDto.Clip.Uri = blobClient.Uri.AbsoluteUri;
         }
         catch(Exception ex)
         {

@@ -27,10 +27,10 @@ public class QueueService : IQueueService
         QueueMessageResponseDto responseDto = new QueueMessageResponseDto();
         try
         {
-            if (clip.Uri == null) 
-                throw new Exception("Clip does not container a URI.");
+            if (clip.Id == null) 
+                throw new Exception("Clip does not container a Id.");
 
-            Azure.Response<SendReceipt> response = await _queueClient.SendMessageAsync(clip.Uri);
+            Azure.Response<SendReceipt> response = await _queueClient.SendMessageAsync(clip.Id);
 
             if (response.GetRawResponse().IsError) 
                 throw new Exception(response.GetRawResponse().ReasonPhrase);

@@ -35,29 +35,25 @@ public class QueueServiceTests
     public async Task EnqueueTest()
     {
         var id = Guid.NewGuid().ToString();
-        var uri = "http://127.0.0.1:10000/devstoreaccount1/clips/" + id;
         Clip clip = new Clip
         {
             Id = id,
             Name = "TestName2",
-            Uri = uri,
         };
 
         var id2 = Guid.NewGuid().ToString();
-        var uri2 = "http://127.0.0.1:10000/devstoreaccount1/clips/" + id2;
         Clip clip2 = new Clip
         {
             Id = id2,
             Name = "TestName2",
-            Uri = uri2,
         };
 
         var response = await _queueService.Enqueue(clip);
         var response2 = await _queueService.Enqueue(clip2);
 
         PeekedMessage[] peakedMessages = await _queueClient.PeekMessagesAsync(maxMessages: 10);
-        var foundMessage = peakedMessages.FirstOrDefault<PeekedMessage>(m => m.MessageText == uri);
-        var foundMessage2 = peakedMessages.FirstOrDefault<PeekedMessage>(m => m.MessageText == uri2);
+        var foundMessage = peakedMessages.FirstOrDefault<PeekedMessage>(m => m.MessageText == id);
+        var foundMessage2 = peakedMessages.FirstOrDefault<PeekedMessage>(m => m.MessageText == id2);
 
         Assert.IsNotNull(foundMessage);
         Assert.IsNotNull(foundMessage2);

@@ -56,7 +56,5 @@ public class StorageServiceTests
 
         Assert.True(blob.Exists());
         Assert.IsNull(blobResponse.ErrorMessage);
-        Assert.That(blob.Uri.AbsoluteUri, Is.EqualTo(blobResponse.Clip.Uri));
-
     }
 }

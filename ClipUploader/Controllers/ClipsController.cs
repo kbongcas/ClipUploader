@@ -25,7 +25,10 @@ public class ClipsController : ControllerBase
     [RequestSizeLimit(200_000_000)]
     public async Task<IActionResult> Upload(IFormFile file)
     {
-        //@TODO - Extract some of this logic into own service?
+        //@TODO
+        //  - Extract some of this logic into own service?
+        //  - Validate content type
+        // var contentType = file.ContentType;
         var id = Guid.NewGuid().ToString();
         var clip = new Clip() { Id = id, Name = file.FileName, File = file };
 
@@ -38,4 +41,5 @@ public class ClipsController : ControllerBase
 
         return Ok();
     }
+
 }
