@@ -1,7 +1,6 @@
 ﻿using Azure.Storage.Queues;
 using Azure.Storage.Queues.Models;
 using ClipUploader.Dtos;
-using ClipUploader.Models;
 using ClipUploader.Services;
 using Microsoft.Extensions.Configuration;
 
@@ -34,26 +33,33 @@ public class QueueServiceTests
     [Test]
     public async Task EnqueueTest()
     {
-        var id = Guid.NewGuid().ToString();
-        Clip clip = new Clip
+        var storageUri1 = "www.somestorage.com/clips/" + Guid.NewGuid().ToString();
+        EnqueueRequestDto clip = new EnqueueRequestDto
         {
-            Id = id,
+            UserId = "someFakeUserId",
             Name = "TestName2",
+            Description = "Description",
+            StorageUri = storageUri1,
         };
 
-        var id2 = Guid.NewGuid().ToString();
-        Clip clip2 = new Clip
+        var storageUri2 = "www.somestorage.com/clips/" + Guid.NewGuid().ToString();
+        EnqueueRequestDto clip2 = new EnqueueRequestDto
         {
-            Id = id2,
+            UserId = "someFakeUserId2",
             Name = "TestName2",
+            Description = "Description",
+            StorageUri = storageUri2,
         };
 
-        var response = await _queueService.Enqueue(clip);
-        var response2 = await _queueService.Enqueue(clip2);
+        var result1 = await _queueService.Enqueue(clip);
+        var result2 = await _queueService.Enqueue(clip2);
+
+        Assert.IsFalse(result1.IsError);
+        Assert.IsFalse(result2.IsError);
 
         PeekedMessage[] peakedMessages = await _queueClient.PeekMessagesAsync(maxMessages: 10);
-        var foundMessage = peakedMessages.FirstOrDefault<PeekedMessage>(m => m.MessageText == id);
-        var foundMessage2 = peakedMessages.FirstOrDefault<PeekedMessage>(m => m.MessageText == id2);
+        var foundMessage = peakedMessages.FirstOrDefault<PeekedMessage>(m => m.MessageId == result1.Result.Id);
+        var foundMessage2 = peakedMessages.FirstOrDefault<PeekedMessage>(m => m.MessageId == result2.Result.Id);
 
         Assert.IsNotNull(foundMessage);
         Assert.IsNotNull(foundMessage2);

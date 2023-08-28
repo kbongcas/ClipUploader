@@ -1,8 +1,8 @@
 ﻿using ClipUploader.Dtos;
-using ClipUploader.Models;
+using ClipUploader.Errors;
 
 namespace ClipUploader.Services;
 public interface IQueueService
 {
-    Task<QueueMessageResponseDto> Enqueue(Clip clip);
+    Task<ServiceResult<EnqueueResponseDto>> Enqueue(EnqueueRequestDto enqueueRequestDto);
 }

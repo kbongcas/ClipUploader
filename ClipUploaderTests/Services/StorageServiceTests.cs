@@ -1,12 +1,10 @@
 ﻿using Azure.Storage.Blobs;
 using ClipUploader.Dtos;
-using ClipUploader.Models;
 using ClipUploader.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using NUnit.Framework;
 
-namespace ClipDataServiceTests.Services;
+namespace ClipUploaderTests.Services;
 public class StorageServiceTests
 {
     private StorageService _storageService;
@@ -40,7 +38,7 @@ public class StorageServiceTests
         var filePath = Path.Combine(Environment.CurrentDirectory, "Data/") + fileName;
         var Id = Guid.NewGuid().ToString();
 
-        BlobResponseDto blobResponse = null;
+        StorageUploadResponseDto storageUploadRequestDto = null;
         BlobContainerClient containerClient = _blobServiceClient.GetBlobContainerClient(containerName);
         BlobClient blob = containerClient.GetBlobClient(fileName);
 
@@ -49,12 +47,13 @@ public class StorageServiceTests
         using (var stream = System.IO.File.OpenRead(filePath))
         {
             var file = new FormFile(stream, 0, stream.Length, null, Path.GetFileName(stream.Name));
-            var clip = new Clip { File = file, Name = fileName, Id = Id };
-            blobResponse = await _storageService.UploadAsync(clip);
+            var clip = new StorageUploadRequestDto { File = file, Id = Id };
+            var result = await _storageService.UploadAsync(clip);
+            storageUploadRequestDto = result.Result;
             blob = containerClient.GetBlobClient(Id);
         }
 
         Assert.True(blob.Exists());
-        Assert.IsNull(blobResponse.ErrorMessage);
+        Assert.IsNotNull(storageUploadRequestDto?.StorageUri);
     }
 }

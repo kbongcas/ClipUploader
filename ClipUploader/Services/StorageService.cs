@@ -1,7 +1,7 @@
 ﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using ClipUploader.Dtos;
-using ClipUploader.Models;
+using ClipUploader.Errors;
 
 namespace ClipUploader.Services;
 
@@ -17,20 +17,22 @@ public class StorageService : IStorageService
     {
         _blobServiceClient = blobServiceClient;
         _blobContainerClient = _blobServiceClient.GetBlobContainerClient(
-            config.GetValue<string>("BlobContainerName"));
+            Environment.GetEnvironmentVariable("BlobContainerName"));
     }
     
-    public async Task<BlobResponseDto> UploadAsync(Clip clip)
+    public async Task<ServiceResult<StorageUploadResponseDto>> UploadAsync(StorageUploadRequestDto storageUploadRequestDto)
     {
-        BlobResponseDto responseDto = new BlobResponseDto();
+        ServiceResult<StorageUploadResponseDto> serviceResult = new();
         try
         {
-            if (clip.File == null) 
+            if (storageUploadRequestDto.File == null) 
                 throw new Exception("Clip does not contain a file.");
+            if (String.IsNullOrEmpty(storageUploadRequestDto.Id)) 
+                throw new Exception("Clip does not contain an Id.");
 
-            BlobClient blobClient = _blobContainerClient.GetBlobClient(clip.Id);
+            BlobClient blobClient = _blobContainerClient.GetBlobClient(storageUploadRequestDto.Id);
             Azure.Response<BlobContentInfo> response;
-            await using (Stream? stream = clip.File.OpenReadStream())
+            await using (Stream? stream = storageUploadRequestDto.File.OpenReadStream())
             {
                 response = await blobClient.UploadAsync(stream);
             }
@@ -38,13 +40,17 @@ public class StorageService : IStorageService
             if (response.GetRawResponse().IsError) 
                 throw new Exception(response.GetRawResponse().ReasonPhrase);
 
-            responseDto.Clip = clip;
+            serviceResult.Result = new StorageUploadResponseDto()
+            {
+                StorageUri = blobClient.Uri.AbsoluteUri
+            };
         }
         catch(Exception ex)
         {
-            //@TODO - Log Error Message
-            responseDto.ErrorMessage = ex.Message;
+            serviceResult.IsError = true;
+            serviceResult.ErrorMessage = ex.Message;
         }
-        return responseDto;
+
+        return serviceResult;
     }
 }
