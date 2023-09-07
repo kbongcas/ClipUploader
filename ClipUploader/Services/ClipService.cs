@@ -54,7 +54,8 @@ public class ClipService : IClipService
                 name = addClipRequestDto.Name,
                 description = addClipRequestDto.Description,
                 uri = "",
-                converted = false
+                converted = false,
+                Public = addClipRequestDto.Public,
             });
             var clipsResponse = await clipsClient.ExecutePostAsync(clipsRequest);
 

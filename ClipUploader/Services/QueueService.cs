@@ -21,7 +21,8 @@ public class QueueService : IQueueService
         )
     {
         _queueServiceClient = queueServiceClient;
-        _queueClient = _queueServiceClient.GetQueueClient(config.GetValue<string>("QueueName"));
+        _queueClient = _queueServiceClient.GetQueueClient(
+            Environment.GetEnvironmentVariable("QueueName"));
     }
 
     public async Task<ServiceResult<EnqueueResponseDto>> Enqueue(EnqueueRequestDto enqueueRequestDto)

@@ -44,6 +44,7 @@ public class ClipsController : ControllerBase
             UserId = userId,
             Name = uploadClipRequestDto.Name,
             Description = uploadClipRequestDto.Description,
+            Public = uploadClipRequestDto.Public
         };
         var addClipResult = await _clipService.AddClipToUserAsync(addClipRequestDto);
         if(addClipResult.IsError)
