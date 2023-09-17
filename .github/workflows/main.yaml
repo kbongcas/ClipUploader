@@ -2,7 +2,7 @@ name: Clip Uploader Build and Deploy for
 
 on:
   push:
-    branches: ['dev']
+    branches: ['master']
 
 jobs:
   build:
