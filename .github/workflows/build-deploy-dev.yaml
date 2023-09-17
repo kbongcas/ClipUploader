@@ -1,8 +1,8 @@
-name: Clip Uploader Build and Deploy for
+name: Clip Uploader Build and Deploy for Dev Branch
 
 on:
   push:
-    branches: ['master']
+    branches: ['dev']
 
 jobs:
   build:
@@ -17,7 +17,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
         
       - name: Build the Docker image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/clipdat-clipuploader:latest . --file ClipUploader/Dockerfile
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/clipdat-clipuploader:dev . --file ClipUploader/Dockerfile
       
       - name: Docker Push
-        run: docker push "${{ secrets.DOCKER_USERNAME }}/clipdat-clipuploader:latest"
+        run: docker push "${{ secrets.DOCKER_USERNAME }}/clipdat-clipuploader:dev"
