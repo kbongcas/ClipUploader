@@ -1,4 +1,4 @@
-name: Clip Uploader Build and Deploy
+name: Clip Uploader Build and Deploy for Dev
 
 on:
   push:
