@@ -89,7 +89,7 @@ public class ClipsController : ControllerBase
         return Ok();
     }
 
-    [HttpGet]
+    [HttpGet("healthcheck")]
     public IActionResult HealthCheck()
     {
         return Ok();
