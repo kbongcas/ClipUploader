@@ -34,7 +34,7 @@ public class ClipsController : ControllerBase
     public async Task<IActionResult> UploadClip([FromForm]UploadClipRequestDto uploadClipRequestDto)
     {
         //@TODO
-        //  - Validate content type - only accept mp4
+        //  - Validate content type - only accept mp4 
         //  - Validate if Content exist
    
         // Add Clip
